@@ -1,0 +1,10 @@
+syntax = "proto3";
+package weather.v1;
+option go_package = "github.com/rcglezreyes/go_weather/api/proto;weatherv1";
+
+message LatLonRequest { double lat = 1; double lon = 2; }
+message ForecastReply { string short_forecast = 1; double temperature_f = 2; string category = 3; }
+
+service WeatherService {
+  rpc GetTodayForecast (LatLonRequest) returns (ForecastReply);
+}
