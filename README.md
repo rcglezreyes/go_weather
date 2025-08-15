@@ -1,5 +1,8 @@
 # go_weather — Echo + Swagger, gRPC, TLS, Docker, Concurrency, Prometheus
 
+## Versions
+```go 1.22.0```
+
 ## Execute
 With ```make``` (Makefile):
 ```bash
