@@ -67,6 +67,7 @@ go run ./cmd/server
 
 With ```make``` (Makefile):
 ```bash
+make docker-prune
 make docker
 make compose-up
 
@@ -95,7 +96,7 @@ grpcurl -plaintext -d '{"lat":38.8894,"lon":-77.0352}' \
 - REST: `GET /api/v1/forecast?lat={lat}&lon={lon}`
 - Health: `/healthz`, `/readyz`
 - Metrics (Prometheus): `/metrics`
-- gRPC: `weather.v1.WeatherService/GetTodayForecast`
+- gRPC: `weather.v1.WeatherService/GetTodayForecast` (Must generate certs and declare API KEY as env var)
 
 ## Exposed metrics
 - **HTTP**: `/metrics` includes `go_*`, `process_*`, and custom metrics:

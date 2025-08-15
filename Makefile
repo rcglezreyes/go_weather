@@ -1,7 +1,7 @@
 MODULE=github.com/rcglezreyes/go_weather
 PROTO=api/proto/weather.proto
 
-# ===== Resolver dónde se instalan los binarios =====
+# ===== Installation for binaries =====
 GOBIN ?= $(shell go env GOBIN)
 ifeq ($(GOBIN),)
   GOBIN := $(shell go env GOPATH)/bin
@@ -12,17 +12,21 @@ PROTOC_GEN_GO       := $(GOBIN)/protoc-gen-go
 PROTOC_GEN_GO_GRPC  := $(GOBIN)/protoc-gen-go-grpc
 PROTOC              := $(shell command -v protoc 2>/dev/null)
 
-# Asegurar PATH para todo make y recetas
+# Add GOBIN to PATH for this Makefile execution
 export PATH := $(PATH):$(GOBIN)
 
-SHELL := /bin/bash
+ifneq (,$(wildcard /bin/bash))
+  SHELL := /bin/bash
+else
+  SHELL := /bin/sh
+endif
 
 .PHONY: proto swag swag-run run build docker test certs \
         compose-up compose-down compose-build-app compose-up-app compose-down-app \
         compose-build-prometheus compose-up-prometheus compose-down-prometheus \
         install-tools check-tools download tidy vendor docker-prune
 
-# ---- Herramientas (instala si faltan) ----
+# ---- Tools installation ----
 install-tools: $(SWAG) $(PROTOC_GEN_GO) $(PROTOC_GEN_GO_GRPC)
 	@echo "✅ Tools ready in $(GOBIN)"
 
@@ -53,7 +57,7 @@ tidy:
 vendor:
 	go mod vendor
 
-# ---- Verificar que protoc (binario nativo) exista ----
+# ---- Verify if protoc is installed ----
 ensure-protoc:
 	@if [ -z "$(PROTOC)" ]; then \
 		echo "❌ Missing 'protoc' compiler."; \
@@ -71,7 +75,7 @@ proto: ensure-protoc install-tools
 swag: install-tools
 	$(SWAG) init -g cmd/server/main.go -o ./docs
 
-# Alternativa sin tener swag en PATH (lo baja y corre al vuelo)
+# To regenerate docs (if needed)
 swag-run:
 	go run github.com/swaggo/swag/cmd/swag@latest init -g cmd/server/main.go -o ./docs
 
