@@ -24,17 +24,16 @@ func main() {
 	grpcPort := flag.String("grpc-port", getenvDefault("GRPC_PORT", "9090"), "gRPC port")
 	flag.Parse()
 
-	// Inicializa métricas (registra collectors y métricas personalizadas)
 	metrics.Init()
 
-	// Cache con TTL y janitor
+	// Cache: TTL & janitor
 	c := cache.NewTTLCache(cache.Config{TTL: 300 /*s*/, SweepInterval: 60 /*s*/, MaxEntries: 5000})
 
 	// Adapters + use case
 	nwsClient := nws.NewNWSClient()
 	svc := usecase.NewWeatherService(nwsClient, c)
 
-	// gRPC (con interceptores de métricas)
+	// gRPC (with Prometheus)
 	if _, err := grpcadapter.Run(":"+*grpcPort, svc); err != nil {
 		log.Fatalf("gRPC: %v", err)
 	}

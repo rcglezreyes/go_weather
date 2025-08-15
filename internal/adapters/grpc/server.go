@@ -8,7 +8,6 @@ import (
 	"net"
 	"os"
 
-	// OJO: ya no importamos logging ni el paquete v1 del middleware
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
 	grpc_prom "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"google.golang.org/grpc"
@@ -71,7 +70,7 @@ func Run(addr string, s ports.WeatherService) (*grpc.Server, error) {
 		return nil, err
 	}
 
-	// Interceptores: recovery (v2) + métricas
+	//Interceptors (recovery, prometheus)
 	uInts := []grpc.UnaryServerInterceptor{
 		recovery.UnaryServerInterceptor(),
 		grpc_prom.UnaryServerInterceptor,
@@ -86,7 +85,6 @@ func Run(addr string, s ports.WeatherService) (*grpc.Server, error) {
 		opts = append(opts, tlsOpt)
 	}
 
-	// En v2 encadenamos con la API nativa de gRPC
 	opts = append(opts, grpc.ChainUnaryInterceptor(uInts...))
 
 	gs := grpc.NewServer(opts...)
@@ -99,7 +97,7 @@ func Run(addr string, s ports.WeatherService) (*grpc.Server, error) {
 	hs.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
 	reflection.Register(gs)
 
-	// Métricas gRPC
+	// Prometheus metrics
 	grpc_prom.Register(gs)
 	grpc_prom.EnableHandlingTimeHistogram()
 

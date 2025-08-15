@@ -7,7 +7,7 @@ import (
 	echo "github.com/labstack/echo/v4"
 )
 
-// OptionalCheckerFromEnv exige X-API-Key solo si existe la variable de entorno API_KEY.
+// OptionalCheckerFromEnv ask for X-API-Key only if API_KEY env var exists.
 func OptionalCheckerFromEnv() echo.MiddlewareFunc {
 	want := os.Getenv("API_KEY")
 	if want == "" {

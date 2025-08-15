@@ -6,10 +6,10 @@ services:
     environment:
       - PORT=8080
       - GRPC_PORT=9090
-      # - API_KEY=supersecreta
+      # - API_KEY=ultrasecretkey123  # (optional) enable API key middleware
     ports:
-      - "8080:8080"
-      - "9090:9090"
+      - "8081:8080"
+      - "9091:9090"
 
   prometheus:
     image: prom/prometheus:latest
@@ -19,11 +19,11 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     ports:
-      - "9091:9090"
+      - "9092:9090"
     depends_on:
       - app
 
-  # grafana (opcional)
+  # grafana (optional)
   # grafana:
   #   image: grafana/grafana-oss:latest
   #   container_name: grafana

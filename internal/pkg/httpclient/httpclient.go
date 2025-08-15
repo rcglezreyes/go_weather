@@ -5,7 +5,6 @@ import (
 	"time"
 )
 
-// NWS requiere un User-Agent descriptivo con contacto
 func New(userAgent string) *http.Client {
 	tr := &http.Transport{Proxy: http.ProxyFromEnvironment, MaxIdleConns: 100, IdleConnTimeout: 90 * time.Second}
 	return &http.Client{Transport: roundTripper{base: tr, ua: userAgent}, Timeout: 12 * time.Second}

@@ -16,6 +16,7 @@ RUN make proto \
 
 # --- runtime ---
 FROM alpine:3.20
+RUN apk add --no-cache ca-certificates && update-ca-certificates
 WORKDIR /app
 COPY --from=builder /app/server /app/server
 EXPOSE 8080 9090

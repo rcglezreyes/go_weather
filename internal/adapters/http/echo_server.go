@@ -14,7 +14,7 @@ import (
 func NewEchoServer(svc ports.WeatherService) *echo.Echo {
 	e := echo.New()
 
-	// Middlewares globales
+	//Global middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())

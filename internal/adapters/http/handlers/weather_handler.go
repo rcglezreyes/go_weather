@@ -23,24 +23,36 @@ func NewWeatherHandler(svc ports.WeatherService) *WeatherHandler { return &Weath
 // @Failure 502 {object} ErrorResponse
 // @Router /forecast [get]
 func (h *WeatherHandler) GetTodayForecast(c echo.Context) error {
+	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
 	latStr := c.QueryParam("lat")
 	lonStr := c.QueryParam("lon")
 
 	lat, err := strconv.ParseFloat(latStr, 64)
 	if err != nil {
+		c.Logger().Error(err)
 		return c.JSON(http.StatusBadRequest, ErrorResponse{Message: "invalid lat"})
 	}
 	lon, err := strconv.ParseFloat(lonStr, 64)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, ErrorResponse{Message: "invalid lon"})
+		c.Logger().Error(err)
+		return c.JSON(http.StatusBadRequest, ErrorResponse{
+			Message: "invalid lon",
+		})
 	}
 
 	res, err := h.svc.GetTodayForecast(c.Request().Context(), lat, lon)
 	if err != nil {
-		return c.JSON(http.StatusBadGateway, ErrorResponse{Message: err.Error()})
+		c.Logger().Error(err)
+		return c.JSON(http.StatusBadGateway, ErrorResponse{
+			Message: err.Error(),
+		})
 	}
 
-	return c.JSON(http.StatusOK, ForecastResponse{ShortForecast: res.ShortForecast, TemperatureF: res.TemperatureF, Category: res.Category})
+	return c.JSON(http.StatusOK, ForecastResponse{
+		ShortForecast: res.ShortForecast,
+		TemperatureF:  res.TemperatureF,
+		Category:      res.Category,
+	})
 }
 
 type ForecastResponse struct {
