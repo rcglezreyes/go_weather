@@ -169,9 +169,6 @@ func (c *Client) fetchPeriods(ctx context.Context, url string) ([]period, error)
 
 func (c *Client) doNWS(ctx context.Context, method, url string) (*http.Response, error) {
 	req, _ := http.NewRequestWithContext(ctx, method, url, nil)
-	req.Header.Del("Accept")
-	req.Header["Accept"] = []string{"application/geo+json"}
-	req.Header.Set("User-Agent", "go_weather/1.0 (contact: rcglezreyes@gmail.com)")
 	return c.http.Do(req)
 }
 
