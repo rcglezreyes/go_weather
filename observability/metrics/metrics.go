@@ -11,10 +11,10 @@ var (
 	initOnce sync.Once
 
 	NWSRequestsTotal = prometheus.NewCounter(prometheus.CounterOpts{
-		Namespace: "go_weather", Subsystem: "nws", Name: "requests_total", Help: "Total de requests al cliente NWS",
+		Namespace: "go_weather", Subsystem: "nws", Name: "requests_total", Help: "Total requests to client NWS",
 	})
 	NWSRequestDuration = prometheus.NewHistogram(prometheus.HistogramOpts{
-		Namespace: "go_weather", Subsystem: "nws", Name: "request_duration_seconds", Help: "Duración de requests NWS",
+		Namespace: "go_weather", Subsystem: "nws", Name: "request_duration_seconds", Help: "Duration of requests to client NWS",
 		Buckets: prometheus.DefBuckets,
 	})
 )
