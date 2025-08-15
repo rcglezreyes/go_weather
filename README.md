@@ -71,7 +71,7 @@ make docker-prune
 make docker
 make compose-up
 
-# Prometheus UI: http://localhost:9092  (scrapea /metrics de la app)
+# Prometheus UI: http://localhost:9092  (scrap metrics gRPC)
 # App REST:     http://localhost:8081/swagger/index.html
 
 ```
@@ -80,16 +80,9 @@ Without ```make```:
 docker build -t go_weather:latest .
 docker compose up -d --build
 
-# Prometheus UI: http://localhost:9092  (scrapea /metrics de la app)
+# Prometheus UI: http://localhost:9092  (scrap metrics gRPC)
 # App REST:     http://localhost:8081/swagger/index.html
 
-```
-
-## gRPC test
-```bash
-grpcurl -plaintext localhost:9090 list weather.v1.WeatherService
-grpcurl -plaintext -d '{"lat":38.8894,"lon":-77.0352}' \
-  localhost:9090 weather.v1.WeatherService/GetTodayForecast
 ```
 
 ## Endpoints
@@ -104,450 +97,468 @@ grpcurl -plaintext -d '{"lat":38.8894,"lon":-77.0352}' \
   - `go_weather_nws_request_duration_seconds`
 - **gRPC**: `go_grpc_*` (latency/throughput) vía `go-grpc-prometheus`.
 
+
+## gRPC test (with Docker)
+Must generate certs and declare API KEY as env var
+```bash
+grpcurl -plaintext localhost:9091 list weather.v1.WeatherService
+grpcurl -plaintext -d '{"lat":38.8894,"lon":-77.0352}' \
+  localhost:9091 weather.v1.WeatherService/GetTodayForecast
+```
+
+## gRPC test (without Docker)
+Must generate certs and declare API KEY as env var
+```bash
+grpcurl -plaintext localhost:9090 list weather.v1.WeatherService
+grpcurl -plaintext -d '{"lat":38.8894,"lon":-77.0352}' \
+  localhost:9090 weather.v1.WeatherService/GetTodayForecast
+```
+
+
 ## Some data for tests in Swagger
 New York, NY, USA:
 ```json
 {
-  "latitude": 40.7128,
-  "longitude": -74.0060,
+  "lat": 40.7128,
+  "lon": -74.0060,
 }
 ```
 Los Angeles, CA, US:
 ```json
 {
-  "latitude": 34.0522,
-  "longitude": -118.2437,
+  "lat": 34.0522,
+  "lon": -118.2437,
 }
 ```
 
 Montgomery, AL, US:
 ```json
 {
-  "latitude": 32.3668,
-  "longitude": -86.3000,
+  "lat": 32.3668,
+  "lon": -86.3000,
 }
 ```
 
 Juneau, AK, US:
 ```json
 {
-  "latitude": 58.3019,
-  "longitude": -134.4197,
+  "lat": 58.3019,
+  "lon": -134.4197,
 }
 ```
 
 Phoenix, AZ, US:
 ```json
 {
-  "latitude": 33.4484,
-  "longitude": -112.0740,
+  "lat": 33.4484,
+  "lon": -112.0740,
 }
 ```
 
 Little Rock, AR, US:
 ```json
 {
-  "latitude": 34.7465,
-  "longitude": -92.2896,
+  "lat": 34.7465,
+  "lon": -92.2896,
 }
 ```
 
 Sacramento, CA, US:
 ```json
 {
-  "latitude": 38.5816,
-  "longitude": -121.4944,
+  "lat": 38.5816,
+  "lon": -121.4944,
 }
 ```
 
 Denver, CO, US:
 ```json
 {
-  "latitude": 39.7392,
-  "longitude": -104.9903,
+  "lat": 39.7392,
+  "lon": -104.9903,
 }
 ```
 
 Hartford, CT, US:
 ```json
 {
-  "latitude": 41.7658,
-  "longitude": -72.6734,
+  "lat": 41.7658,
+  "lon": -72.6734,
 }
 ```
 
 Dover, DE, US:
 ```json
 {
-  "latitude": 39.1582,
-  "longitude": -75.5244,
+  "lat": 39.1582,
+  "lon": -75.5244,
 }
 ```
 
 Tallahassee, FL, US:
 ```json
 {
-  "latitude": 30.4383,
-  "longitude": -84.2807,
+  "lat": 30.4383,
+  "lon": -84.2807,
 }
 ```
 
 Atlanta, GA, US:
 ```json
 {
-  "latitude": 33.7490,
-  "longitude": -84.3880,
+  "lat": 33.7490,
+  "lon": -84.3880,
 }
 ```
 
 Honolulu, HI, US:
 ```json
 {
-  "latitude": 21.3069,
-  "longitude": -157.8583,
+  "lat": 21.3069,
+  "lon": -157.8583,
 }
 ```
 
 Boise, ID, US:
 ```json
 {
-  "latitude": 43.6150,
-  "longitude": -116.2023,
+  "lat": 43.6150,
+  "lon": -116.2023,
 }
 ```
 
 Springfield, IL, US:
 ```json
 {
-  "latitude": 39.7817,
-  "longitude": -89.6501,
+  "lat": 39.7817,
+  "lon": -89.6501,
 }
 ```
 
 Indianapolis, IN, US:
 ```json
 {
-  "latitude": 39.7684,
-  "longitude": -86.1581,
+  "lat": 39.7684,
+  "lon": -86.1581,
 }
 ```
 
 Des Moines, IA, US:
 ```json
 {
-  "latitude": 41.5868,
-  "longitude": -93.6250,
+  "lat": 41.5868,
+  "lon": -93.6250,
 }
 ```
 
 Topeka, KS, US:
 ```json
 {
-  "latitude": 39.0473,
-  "longitude": -95.6752,
+  "lat": 39.0473,
+  "lon": -95.6752,
 }
 ```
 
 Frankfort, KY, US:
 ```json
 {
-  "latitude": 38.2009,
-  "longitude": -84.8733,
+  "lat": 38.2009,
+  "lon": -84.8733,
 }
 ```
 
 Baton Rouge, LA, US:
 ```json
 {
-  "latitude": 30.4515,
-  "longitude": -91.1871,
+  "lat": 30.4515,
+  "lon": -91.1871,
 }
 ```
 
 Augusta, ME, US:
 ```json
 {
-  "latitude": 44.3106,
-  "longitude": -69.7795,
+  "lat": 44.3106,
+  "lon": -69.7795,
 }
 ```
 
 Annapolis, MD, US:
 ```json
 {
-  "latitude": 38.9784,
-  "longitude": -76.4922,
+  "lat": 38.9784,
+  "lon": -76.4922,
 }
 ```
 
 Boston, MA, US:
 ```json
 {
-  "latitude": 42.3601,
-  "longitude": -71.0589,
+  "lat": 42.3601,
+  "lon": -71.0589,
 }
 ```
 
 Lansing, MI, US:
 ```json
 {
-  "latitude": 42.7325,
-  "longitude": -84.5555,
+  "lat": 42.7325,
+  "lon": -84.5555,
 }
 ```
 
 Saint Paul, MN, US:
 ```json
 {
-  "latitude": 44.9537,
-  "longitude": -93.0900,
+  "lat": 44.9537,
+  "lon": -93.0900,
 }
 ```
 
 Jackson, MS, US:
 ```json
 {
-  "latitude": 32.2988,
-  "longitude": -90.1848,
+  "lat": 32.2988,
+  "lon": -90.1848,
 }
 ```
 
 Jefferson City, MO, US:
 ```json
 {
-  "latitude": 38.5767,
-  "longitude": -92.1735,
+  "lat": 38.5767,
+  "lon": -92.1735,
 }
 ```
 
 Helena, MT, US:
 ```json
 {
-  "latitude": 46.5884,
-  "longitude": -112.0245,
+  "lat": 46.5884,
+  "lon": -112.0245,
 }
 ```
 
 Lincoln, NE, US:
 ```json
 {
-  "latitude": 40.8136,
-  "longitude": -96.7026,
+  "lat": 40.8136,
+  "lon": -96.7026,
 }
 ```
 
 Carson City, NV, US:
 ```json
 {
-  "latitude": 39.1638,
-  "longitude": -119.7674,
+  "lat": 39.1638,
+  "lon": -119.7674,
 }
 ```
 
 Concord, NH, US:
 ```json
 {
-  "latitude": 43.2081,
-  "longitude": -71.5376,
+  "lat": 43.2081,
+  "lon": -71.5376,
 }
 ```
 
 Trenton, NJ, US:
 ```json
 {
-  "latitude": 40.2206,
-  "longitude": -74.7597,
+  "lat": 40.2206,
+  "lon": -74.7597,
 }
 ```
 
 Santa Fe, NM, US:
 ```json
 {
-  "latitude": 35.6870,
-  "longitude": -105.9378,
+  "lat": 35.6870,
+  "lon": -105.9378,
 }
 ```
 
 Albany, NY, US:
 ```json
 {
-  "latitude": 42.6526,
-  "longitude": -73.7562,
+  "lat": 42.6526,
+  "lon": -73.7562,
 }
 ```
 
 Raleigh, NC, US:
 ```json
 {
-  "latitude": 35.7796,
-  "longitude": -78.6382,
+  "lat": 35.7796,
+  "lon": -78.6382,
 }
 ```
 
 Bismarck, ND, US:
 ```json
 {
-  "latitude": 46.8083,
-  "longitude": -100.7837,
+  "lat": 46.8083,
+  "lon": -100.7837,
 }
 ```
 
 Columbus, OH, US:
 ```json
 {
-  "latitude": 39.9612,
-  "longitude": -82.9988,
+  "lat": 39.9612,
+  "lon": -82.9988,
 }
 ```
 
 Oklahoma City, OK, US:
 ```json
 {
-  "latitude": 35.4676,
-  "longitude": -97.5164,
+  "lat": 35.4676,
+  "lon": -97.5164,
 }
 ```
 
 Salem, OR, US:
 ```json
 {
-  "latitude": 44.9429,
-  "longitude": -123.0351,
+  "lat": 44.9429,
+  "lon": -123.0351,
 }
 ```
 
 Harrisburg, PA, US:
 ```json
 {
-  "latitude": 40.2732,
-  "longitude": -76.8867,
+  "lat": 40.2732,
+  "lon": -76.8867,
 }
 ```
 
 Providence, RI, US:
 ```json
 {
-  "latitude": 41.8240,
-  "longitude": -71.4128,
+  "lat": 41.8240,
+  "lon": -71.4128,
 }
 ```
 
 Columbia, SC, US:
 ```json
 {
-  "latitude": 34.0007,
-  "longitude": -81.0348,
+  "lat": 34.0007,
+  "lon": -81.0348,
 }
 ```
 
 Pierre, SD, US:
 ```json
 {
-  "latitude": 44.3683,
-  "longitude": -100.3510,
+  "lat": 44.3683,
+  "lon": -100.3510,
 }
 ```
 
 Nashville, TN, US:
 ```json
 {
-  "latitude": 36.1627,
-  "longitude": -86.7816,
+  "lat": 36.1627,
+  "lon": -86.7816,
 }
 ```
 
 Austin, TX, US:
 ```json
 {
-  "latitude": 30.2672,
-  "longitude": -97.7431,
+  "lat": 30.2672,
+  "lon": -97.7431,
 }
 ```
 
 Salt Lake City, UT, US:
 ```json
 {
-  "latitude": 40.7608,
-  "longitude": -111.8910,
+  "lat": 40.7608,
+  "lon": -111.8910,
 }
 ```
 
 Montpelier, VT, US:
 ```json
 {
-  "latitude": 44.2601,
-  "longitude": -72.5754,
+  "lat": 44.2601,
+  "lon": -72.5754,
 }
 ```
 
 Richmond, VA, US:
 ```json
 {
-  "latitude": 37.5407,
-  "longitude": -77.4360,
+  "lat": 37.5407,
+  "lon": -77.4360,
 }
 ```
 
 Olympia, WA, US:
 ```json
 {
-  "latitude": 47.0379,
-  "longitude": -122.9007,
+  "lat": 47.0379,
+  "lon": -122.9007,
 }
 ```
 
 Charleston, WV, US:
 ```json
 {
-  "latitude": 38.3498,
-  "longitude": -81.6326,
+  "lat": 38.3498,
+  "lon": -81.6326,
 }
 ```
 
 Madison, WI, US:
 ```json
 {
-  "latitude": 43.0731,
-  "longitude": -89.4012,
+  "lat": 43.0731,
+  "lon": -89.4012,
 }
 ```
 
 Cheyenne, WY, US:
 ```json
 {
-  "latitude": 41.1400,
-  "longitude": -104.8202,
+  "lat": 41.1400,
+  "lon": -104.8202,
 }
 ```
 
 Washington, DC, US:
 ```json
 {
-  "latitude": 38.9072,
-  "longitude": -77.0369,
+  "lat": 38.9072,
+  "lon": -77.0369,
 }
 ```
 
 Mexico City, Mexico:
 ```json
 {
-  "latitude": 19.4326,
-  "longitude": -99.1332,
+  "lat": 19.4326,
+  "lon": -99.1332,
 }
 ```
 
 Madrid, Spain:
 ```json
 {
-  "latitude": 40.4168,
-  "longitude": -3.7038,
+  "lat": 40.4168,
+  "lon": -3.7038,
 }
 ```
 
 Buenos Aires, Argentina:
 ```json
 {
-  "latitude": -34.6037,
-  "longitude": -58.3816,
+  "lat": -34.6037,
+  "lon": -58.3816,
 }
 ```
